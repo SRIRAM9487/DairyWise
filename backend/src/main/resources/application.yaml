@@ -21,17 +21,17 @@ spring:
       hibernate:
         format_sql: true
 
-  data:
-    mongodb:
-      uri: mongodb://root:1234@localhost:9001/dwise_mongo?authSource=admin
+  #  data:
+  #    mongodb:
+  #      uri: mongodb://root:1234@localhost:9001/dwise_mongo?authSource=admin
 
   security:
     user:
       name: user
       password: user
 
-  profiles:
-    active: prod
+  #  profiles:
+  #    active: prod
 
 
 logging:

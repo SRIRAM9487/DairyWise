@@ -1,11 +1,10 @@
-package com.DairyWise.backend.Config;
+package com.DairyWise.backend.User.Config;
 
 import com.DairyWise.backend.User.Service.UserDetailsServiceImp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -24,11 +24,11 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-    String[] permittedUrls = { "/admin/login", "/admin/register", "/Manager/login", "/admin/", "/manager/",
+    String[] permittedUrls = { "/user/", "/user/login", "/user/register", "/Manager/login", "/admin/", "/manager/",
         "/customer/", "/dailyEntry/" };
     httpSecurity
-        .cors(Customizer.withDefaults())
-        .csrf(Customizer.withDefaults())
+        .cors(cors -> cors.disable())
+        .csrf(csrf -> csrf.disable())
         .httpBasic(Customizer.withDefaults())
         .logout(page -> page.disable())
         .formLogin(page -> page.disable())
@@ -43,7 +43,7 @@ public class SecurityConfig {
   public AuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
     daoAuthenticationProvider.setUserDetailsService(userDetailsServiceImp);
-    daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+    daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
     return daoAuthenticationProvider;
   }
 
@@ -51,6 +51,11 @@ public class SecurityConfig {
   public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
       throws Exception {
     return authenticationConfiguration.getAuthenticationManager();
+  }
+
+  @Bean
+  public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    return new BCryptPasswordEncoder(12);
   }
 
 }

@@ -46,8 +46,7 @@ public class UserServiceImp implements UserService {
   @Autowired
   private BCryptPasswordEncoder encoder;
 
-  @Autowired
-  private final Logger LOG = LoggerFactory.getLogger(UserServiceImp.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UserServiceImp.class);
 
   // -------------------------- IMPLEMETATIONS --------------------------
 
@@ -74,14 +73,14 @@ public class UserServiceImp implements UserService {
       throw new UserInvalidPasswordException("Invalid user password");
     }
 
-    if (isValidRole(registerDTO.getRole())) {
+    if (!isValidRole(registerDTO.getRole())) {
       LOG.error("Invalid User role");
       throw new UserInvalidRoleException("Invalid role");
     }
 
     UserModel user = UserModel
         .builder()
-        .UserId(registerDTO.getUserId())
+        .userId(registerDTO.getUserId())
         .password(encoder.encode(registerDTO.getPassword()))
         .role(UserRoles.valueOf(registerDTO.getRole()))
         .isAccountNonLocked(true)

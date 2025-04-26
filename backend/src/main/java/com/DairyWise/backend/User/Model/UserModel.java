@@ -28,7 +28,7 @@ public class UserModel {
   private Integer id;
 
   @Column(name = "userId", nullable = false, unique = true)
-  private String UserId;
+  private String userId;
 
   @Column(name = "password", nullable = false)
   private String password;

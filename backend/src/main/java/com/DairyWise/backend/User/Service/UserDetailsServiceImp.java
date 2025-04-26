@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
 
-  @Autowired
-  private Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImp.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImp.class);
   @Autowired
   private UserRepository userRepository;
 
