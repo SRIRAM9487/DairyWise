@@ -1,12 +1,17 @@
 package com.DairyWise.backend.User.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.DairyWise.backend.User.DTO.Request.UserDeleteRequestDTO;
+import com.DairyWise.backend.User.DTO.Request.UserDetailRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserEnableRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserLockRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserLoginRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserRegisterRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserUpdateRequestDTO;
 import com.DairyWise.backend.User.DTO.Response.UserDeleteResponseDTO;
+import com.DairyWise.backend.User.DTO.Response.UserDetailResponseDTO;
 import com.DairyWise.backend.User.DTO.Response.UserEnableResponseDTO;
 import com.DairyWise.backend.User.DTO.Response.UserLockResponseDTO;
 import com.DairyWise.backend.User.DTO.Response.UserLoginResponseDTO;
@@ -35,7 +40,7 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserServiceImp implements UserService {
 
-  // -------------------------- DEPENDECIES --------------------------
+  // -------------------------- DEPENDENCIES --------------------------
 
   @Autowired
   private UserRepository userRepository;
@@ -48,38 +53,36 @@ public class UserServiceImp implements UserService {
 
   private static final Logger LOG = LoggerFactory.getLogger(UserServiceImp.class);
 
-  // -------------------------- IMPLEMETATIONS --------------------------
+  // -------------------------- IMPLEMENTATIONS --------------------------
 
   @Override
   public UserRegisterResponseDTO register(UserRegisterRequestDTO registerDTO)
       throws UserInvalidNameException, UserNameAlreadyExistsException,
       UserInvalidUserIdException, UserInvalidPasswordException, UserInvalidRoleException {
 
-    LOG.debug("Saving an new User ");
+    LOG.debug("Registering new user");
 
     if (userRepository.existsByUserId(registerDTO.getUserId())) {
-      LOG.error("User name already exists");
-      throw new UserNameAlreadyExistsException("User Name already exists in the database");
+      LOG.error("User ID '{}' already exists", registerDTO.getUserId());
+      throw new UserNameAlreadyExistsException("User ID already exists");
     }
 
     if (registerDTO.getUserId().length() < 5) {
-      LOG.error("Invalid User Id");
-      throw new UserInvalidUserIdException("Invalid User id");
-
+      LOG.error("Invalid User ID length");
+      throw new UserInvalidUserIdException("User ID must be at least 5 characters");
     }
 
     if (registerDTO.getPassword().length() < 5) {
-      LOG.error("The password cannot be less than 5");
-      throw new UserInvalidPasswordException("Invalid user password");
+      LOG.error("Password too short");
+      throw new UserInvalidPasswordException("Password must be at least 5 characters");
     }
 
     if (!isValidRole(registerDTO.getRole())) {
-      LOG.error("Invalid User role");
+      LOG.error("Invalid role '{}'", registerDTO.getRole());
       throw new UserInvalidRoleException("Invalid role");
     }
 
-    UserModel user = UserModel
-        .builder()
+    UserModel user = UserModel.builder()
         .userId(registerDTO.getUserId())
         .password(encoder.encode(registerDTO.getPassword()))
         .role(UserRoles.valueOf(registerDTO.getRole()))
@@ -88,39 +91,40 @@ public class UserServiceImp implements UserService {
         .build();
 
     userRepository.save(user);
-    LOG.info("User Registered ID : {}", registerDTO.getUserId());
+    LOG.info("User ID '{}' registered successfully", registerDTO.getUserId());
 
-    return UserRegisterResponseDTO
-        .builder()
+    return UserRegisterResponseDTO.builder()
         .userId(registerDTO.getUserId())
         .role(registerDTO.getRole())
-        .status("Registration Successfull")
+        .status("Registration successful")
         .build();
   }
 
   @Override
   public UserLoginResponseDTO login(UserLoginRequestDTO loginDTO)
       throws UserInvalidUserIdException, UserInvalidPasswordException {
-    LOG.debug("User login ");
+
+    LOG.debug("User login attempt for UserId: {}", loginDTO.getUserId());
 
     if (loginDTO.getUserId().length() < 5) {
-      LOG.error("Invalid User Id");
-      throw new UserInvalidUserIdException("Invalid User id");
+      LOG.error("Invalid User ID length");
+      throw new UserInvalidUserIdException("User ID must be at least 5 characters");
     }
+
     if (loginDTO.getPassword().length() < 5) {
-      LOG.error("The password cannot be less than 5");
-      throw new UserInvalidPasswordException("Invalid user password");
+      LOG.error("Password too short");
+      throw new UserInvalidPasswordException("Password must be at least 5 characters");
     }
+
     authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserId(), loginDTO.getPassword()));
 
-    String jwtToken = "";
+    String jwtToken = ""; 
 
-    LOG.info("User Logged UserId : {}", loginDTO.getUserId());
-    return UserLoginResponseDTO
-        .builder()
+    LOG.info("User ID '{}' logged in successfully", loginDTO.getUserId());
+    return UserLoginResponseDTO.builder()
         .token(jwtToken)
-        .status("Login Successfull")
+        .status("Login successful")
         .build();
   }
 
@@ -129,26 +133,26 @@ public class UserServiceImp implements UserService {
   public UserUpdateResponseDTO update(UserUpdateRequestDTO userUpdateDTO)
       throws UserInvalidUserIdException, UserInvalidPasswordException, UserInvalidRoleException, UserNotFoundException {
 
-    LOG.debug("User updation UserId : {}", userUpdateDTO.getUserId());
+    LOG.debug("Updating user with UserId: {}", userUpdateDTO.getUserId());
 
     if (userUpdateDTO.getUserId().length() < 5) {
-      LOG.error("Invalid User Id");
-      throw new UserInvalidUserIdException("Invalid User id");
+      LOG.error("Invalid User ID length");
+      throw new UserInvalidUserIdException("User ID must be at least 5 characters");
     }
 
     if (userUpdateDTO.getPassword().length() < 5) {
-      LOG.error("The password cannot be less than 5");
-      throw new UserInvalidPasswordException("Invalid user password");
+      LOG.error("Password too short");
+      throw new UserInvalidPasswordException("Password must be at least 5 characters");
     }
 
-    if (isValidRole(userUpdateDTO.getRole())) {
-      LOG.error("Invalid User role");
+    if (!isValidRole(userUpdateDTO.getRole())) {
+      LOG.error("Invalid role '{}'", userUpdateDTO.getRole());
       throw new UserInvalidRoleException("Invalid role");
     }
 
     UserModel user = userRepository.findByUserId(userUpdateDTO.getUserId()).orElseThrow(() -> {
-      LOG.error("User Not found UserId : {}", userUpdateDTO.getUserId());
-      return new UserNotFoundException("User not Found");
+      LOG.error("User not found for UserId: {}", userUpdateDTO.getUserId());
+      return new UserNotFoundException("User not found");
     });
 
     user.setUserId(userUpdateDTO.getUserId());
@@ -156,7 +160,7 @@ public class UserServiceImp implements UserService {
     user.setPassword(encoder.encode(userUpdateDTO.getPassword()));
 
     userRepository.save(user);
-    LOG.info("User Updated successfully UserId : {}", userUpdateDTO.getUserId());
+    LOG.info("User ID '{}' updated successfully", userUpdateDTO.getUserId());
 
     return UserUpdateResponseDTO.builder().build();
   }
@@ -165,16 +169,15 @@ public class UserServiceImp implements UserService {
   @Override
   public UserDeleteResponseDTO delete(UserDeleteRequestDTO userDeleteDTO) throws UserNotFoundException {
 
-    LOG.debug("User Deletion of UserId : {}", userDeleteDTO.getUserId());
+    LOG.debug("Deleting user with UserId: {}", userDeleteDTO.getUserId());
 
     if (!userRepository.existsByUserId(userDeleteDTO.getUserId())) {
-      LOG.error("User not found UserId : {}", userDeleteDTO.getUserId());
-      throw new UserNotFoundException("User Name already exists in the database");
+      LOG.error("User not found for UserId: {}", userDeleteDTO.getUserId());
+      throw new UserNotFoundException("User not found");
     }
 
     userRepository.deleteByUserId(userDeleteDTO.getUserId());
-
-    LOG.info("User delete successfully UserID : {}", userDeleteDTO.getUserId());
+    LOG.info("User ID '{}' deleted successfully", userDeleteDTO.getUserId());
 
     return UserDeleteResponseDTO.builder().build();
   }
@@ -182,20 +185,17 @@ public class UserServiceImp implements UserService {
   @Override
   public UserEnableResponseDTO disableUser(UserEnableRequestDTO userEnableDTO) throws UserNotFoundException {
 
-    LOG.debug("User disable UserId : {}", userEnableDTO.getUserId());
+    LOG.debug("Disabling user with UserId: {}", userEnableDTO.getUserId());
 
     UserModel user = userRepository.findByUserId(userEnableDTO.getUserId()).orElseThrow(() -> {
-      LOG.error("User Not found UserId : {}", userEnableDTO.getUserId());
-      return new UserNotFoundException("User not Found");
+      LOG.error("User not found for UserId: {}", userEnableDTO.getUserId());
+      return new UserNotFoundException("User not found");
     });
 
-    if (user.isEnabled()) {
-      user.setEnabled(false);
-    }
-
+    user.setEnabled(false);
     userRepository.save(user);
 
-    LOG.info("User Disabled UserId : {}", userEnableDTO.getUserId());
+    LOG.info("User ID '{}' disabled", userEnableDTO.getUserId());
 
     return UserEnableResponseDTO.builder().build();
   }
@@ -203,20 +203,17 @@ public class UserServiceImp implements UserService {
   @Override
   public UserEnableResponseDTO enableUser(UserEnableRequestDTO userEnableDTO) throws UserNotFoundException {
 
-    LOG.debug("User enable UserId : {}", userEnableDTO.getUserId());
+    LOG.debug("Enabling user with UserId: {}", userEnableDTO.getUserId());
 
     UserModel user = userRepository.findByUserId(userEnableDTO.getUserId()).orElseThrow(() -> {
-      LOG.error("User Not found UserId : {}", userEnableDTO.getUserId());
-      return new UserNotFoundException("User not Found");
+      LOG.error("User not found for UserId: {}", userEnableDTO.getUserId());
+      return new UserNotFoundException("User not found");
     });
 
-    if (!user.isEnabled()) {
-      user.setEnabled(true);
-    }
-
+    user.setEnabled(true);
     userRepository.save(user);
 
-    LOG.info("User Enabled UserId : {}", userEnableDTO.getUserId());
+    LOG.info("User ID '{}' enabled", userEnableDTO.getUserId());
 
     return UserEnableResponseDTO.builder().build();
   }
@@ -224,20 +221,17 @@ public class UserServiceImp implements UserService {
   @Override
   public UserLockResponseDTO lockUser(UserLockRequestDTO userLockDTO) throws UserNotFoundException {
 
-    LOG.debug("User locking UserId : {}", userLockDTO.getUserId());
+    LOG.debug("Locking user with UserId: {}", userLockDTO.getUserId());
 
     UserModel user = userRepository.findByUserId(userLockDTO.getUserId()).orElseThrow(() -> {
-      LOG.error("User Not found UserId : {}", userLockDTO.getUserId());
-      return new UserNotFoundException("User not Found");
+      LOG.error("User not found for UserId: {}", userLockDTO.getUserId());
+      return new UserNotFoundException("User not found");
     });
 
-    if (user.isAccountNonLocked()) {
-      user.setAccountNonLocked(false);
-    }
-
+    user.setAccountNonLocked(false);
     userRepository.save(user);
 
-    LOG.info("User locked UserId : {}", userLockDTO.getUserId());
+    LOG.info("User ID '{}' locked", userLockDTO.getUserId());
 
     return UserLockResponseDTO.builder().build();
   }
@@ -245,22 +239,62 @@ public class UserServiceImp implements UserService {
   @Override
   public UserLockResponseDTO unlockUser(UserLockRequestDTO userLockDTO) throws UserNotFoundException {
 
-    LOG.debug("User unlocking UserId : {}", userLockDTO.getUserId());
+    LOG.debug("Unlocking user with UserId: {}", userLockDTO.getUserId());
 
     UserModel user = userRepository.findByUserId(userLockDTO.getUserId()).orElseThrow(() -> {
-      LOG.error("User Not found UserId : {}", userLockDTO.getUserId());
-      return new UserNotFoundException("User not Found");
+      LOG.error("User not found for UserId: {}", userLockDTO.getUserId());
+      return new UserNotFoundException("User not found");
     });
 
-    if (!user.isAccountNonLocked()) {
-      user.setAccountNonLocked(true);
-    }
-
+    user.setAccountNonLocked(true);
     userRepository.save(user);
 
-    LOG.info("User unlocked UserId : {}", userLockDTO.getUserId());
+    LOG.info("User ID '{}' unlocked", userLockDTO.getUserId());
 
     return UserLockResponseDTO.builder().build();
+  }
+
+  @Override
+  public List<UserDetailResponseDTO> getAllUsers() {
+    LOG.debug("Fetching all users");
+
+    List<UserModel> users = userRepository.findAll();
+    LOG.info("Fetched {} users", users.size());
+
+    return users.stream()
+        .map(user -> UserDetailResponseDTO.builder()
+            .userId(user.getUserId())
+            .role(user.getRole().name())
+            .isAccountNonLocked(user.isAccountNonLocked())
+            .isEnabled(user.isEnabled())
+            .build())
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public UserDetailResponseDTO getUserByUserId(UserDetailRequestDTO userDetailRequestDTO)
+      throws UserInvalidUserIdException, UserNotFoundException {
+
+    LOG.debug("Fetching user detail for UserId: {}", userDetailRequestDTO.getUserId());
+
+    if (userDetailRequestDTO.getUserId().length() < 5) {
+      LOG.error("Invalid User ID length");
+      throw new UserInvalidUserIdException("User ID must be at least 5 characters");
+    }
+
+    UserModel user = userRepository.findByUserId(userDetailRequestDTO.getUserId()).orElseThrow(() -> {
+      LOG.error("User not found for UserId: {}", userDetailRequestDTO.getUserId());
+      return new UserNotFoundException("User not found");
+    });
+
+    LOG.info("Fetched user details for UserId: {}", userDetailRequestDTO.getUserId());
+
+    return UserDetailResponseDTO.builder()
+        .userId(user.getUserId())
+        .role(user.getRole().name())
+        .isEnabled(user.isEnabled())
+        .isAccountNonLocked(user.isAccountNonLocked())
+        .build();
   }
 
   // =========================== METHODS ==========================

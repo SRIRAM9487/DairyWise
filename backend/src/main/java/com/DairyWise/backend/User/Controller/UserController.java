@@ -1,6 +1,7 @@
 package com.DairyWise.backend.User.Controller;
 
 import com.DairyWise.backend.User.DTO.Request.UserDeleteRequestDTO;
+import com.DairyWise.backend.User.DTO.Request.UserDetailRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserEnableRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserLockRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserLoginRequestDTO;
@@ -144,6 +145,31 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     } catch (Exception e) {
       LOG.error("Error while Unlcoking user : {}", e.toString());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
+    }
+  }
+
+  @GetMapping("/get/all")
+  public ResponseEntity<?> userGetAll() {
+    try {
+      return ResponseEntity.ok(userServiceImp.getAllUsers());
+    } catch (Exception e) {
+      LOG.error("Error while Unlcoking user : {}", e.toString());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
+    }
+  }
+
+  @PostMapping("/get/user")
+  public ResponseEntity<?> userGetByUserId(@RequestBody UserDetailRequestDTO userDetailRequestDTO) {
+    try {
+      return ResponseEntity.ok(userServiceImp.getUserByUserId(userDetailRequestDTO));
+    } catch (UserInvalidUserIdException | UserNotFoundException e) {
+      LOG.error("Error while fetching user : {}", e.toString());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+
+    } catch (Exception e) {
+
+      LOG.error("Error while fetching user : {}", e.toString());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
     }
   }

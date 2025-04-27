@@ -1,12 +1,16 @@
 package com.DairyWise.backend.User.Service;
 
+import java.util.List;
+
 import com.DairyWise.backend.User.DTO.Request.UserDeleteRequestDTO;
+import com.DairyWise.backend.User.DTO.Request.UserDetailRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserEnableRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserLockRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserLoginRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserRegisterRequestDTO;
 import com.DairyWise.backend.User.DTO.Request.UserUpdateRequestDTO;
 import com.DairyWise.backend.User.DTO.Response.UserDeleteResponseDTO;
+import com.DairyWise.backend.User.DTO.Response.UserDetailResponseDTO;
 import com.DairyWise.backend.User.DTO.Response.UserEnableResponseDTO;
 import com.DairyWise.backend.User.DTO.Response.UserLockResponseDTO;
 import com.DairyWise.backend.User.DTO.Response.UserLoginResponseDTO;
@@ -39,4 +43,9 @@ public interface UserService {
   UserEnableResponseDTO enableUser(UserEnableRequestDTO userEnableDTO) throws UserNotFoundException;
 
   UserEnableResponseDTO disableUser(UserEnableRequestDTO userEnableDTO) throws UserNotFoundException;
+
+  UserDetailResponseDTO getUserByUserId(UserDetailRequestDTO UserDetailRequestDTO) throws UserInvalidUserIdException, UserNotFoundException;
+
+  List<UserDetailResponseDTO> getAllUsers();
+
 }
