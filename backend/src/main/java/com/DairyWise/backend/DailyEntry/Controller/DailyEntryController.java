@@ -1,4 +1,4 @@
-package com.DairyWise.backend.DailyEntry;
+package com.DairyWise.backend.DailyEntry.Controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
