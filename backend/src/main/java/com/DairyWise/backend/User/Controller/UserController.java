@@ -166,9 +166,7 @@ public class UserController {
     } catch (UserInvalidUserIdException | UserNotFoundException e) {
       LOG.error("Error while fetching user : {}", e.toString());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
-
     } catch (Exception e) {
-
       LOG.error("Error while fetching user : {}", e.toString());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
     }

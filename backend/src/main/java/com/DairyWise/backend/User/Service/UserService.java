@@ -44,7 +44,8 @@ public interface UserService {
 
   UserEnableResponseDTO disableUser(UserEnableRequestDTO userEnableDTO) throws UserNotFoundException;
 
-  UserDetailResponseDTO getUserByUserId(UserDetailRequestDTO UserDetailRequestDTO) throws UserInvalidUserIdException, UserNotFoundException;
+  UserDetailResponseDTO getUserByUserId(UserDetailRequestDTO UserDetailRequestDTO)
+      throws UserInvalidUserIdException, UserNotFoundException;
 
   List<UserDetailResponseDTO> getAllUsers();
 
