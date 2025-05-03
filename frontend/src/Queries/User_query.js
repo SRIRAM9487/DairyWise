@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import AxiosInstance from "./AxiosInstance"
 
 export const login = () => {
-
-  return useQuery("login",
-    async () => {
-      return await AxiosInstance.post("/login")
+  return useMutation("login",
+    async (userLoginRequestDTO) => {
+      const response = await AxiosInstance.post("/login", userLoginRequestDTO);
+      return response.data;
     }
   )
 }

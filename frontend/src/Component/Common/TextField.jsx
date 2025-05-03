@@ -6,9 +6,9 @@ const TextField = ({
   type,
   placeholder,
   minLength,
-  register,
+  onChange,
   required,
-  message,
+  value,
   errors,
 }) => {
   return (
@@ -25,20 +25,18 @@ const TextField = ({
         type={type}
         name={id}
         id={id}
+        value={value}
         placeholder={placeholder}
         minLength={minLength}
         className={`w-full border p-2 mt-2`}
-        {
-        ...register(id, {
-          required: { value: required, message: message },
-          minLength: minLength && { value: minLength, message: `Minimum length is ${minLength}` }
-        })}
+        required={required}
+        onChange={onChange}
       />
 
       {
-        errors[id] && (
-          <p className=''>
-            {errors[id].messagge}
+        errors[id] && errors[id] && (
+          <p className='text-sm text-red-700 mt-1'>
+            {errors[id]}
           </p>
         )
       }
