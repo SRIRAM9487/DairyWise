@@ -5,11 +5,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      colors:{
-        searchIconColor:"#9e9ea7"
-      }
-    },
+    extend: {},
   },
   plugins: [],
 }

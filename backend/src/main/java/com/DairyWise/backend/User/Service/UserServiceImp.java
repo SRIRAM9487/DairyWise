@@ -119,7 +119,7 @@ public class UserServiceImp implements UserService {
     authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserId(), loginDTO.getPassword()));
 
-    String jwtToken = ""; 
+    String jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyTmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNjUyMTQ4NjA3fQ.ejYsN4HnVffz4xwV6rGmy-0dW6K73W-kdTdxR1iAdG8";
 
     LOG.info("User ID '{}' logged in successfully", loginDTO.getUserId());
     return UserLoginResponseDTO.builder()

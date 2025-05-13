@@ -1,6 +1,7 @@
 package com.DairyWise.backend.Admin.DTO.Request;
 
-public class AdminLoginRequestDTO {
+import lombok.Getter;
 
-  
+@Getter
+public class AdminLoginRequestDTO {
 }

@@ -1,6 +1,7 @@
 package com.DairyWise.backend.Admin.DTO.Response;
 
-public class AdminLoginResponseDTO {
+import lombok.Builder;
 
-  
+@Builder
+public class AdminLoginResponseDTO {
 }
