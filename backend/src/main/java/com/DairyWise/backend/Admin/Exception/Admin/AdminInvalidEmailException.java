@@ -1,4 +1,4 @@
-package com.DairyWise.backend.Admin.Exception;
+package com.DairyWise.backend.Admin.Exception.Admin;
 
 public class AdminInvalidEmailException extends Exception{
 
