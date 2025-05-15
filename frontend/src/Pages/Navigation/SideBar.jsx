@@ -4,16 +4,19 @@ import { FaUserCircle, FaSearch } from 'react-icons/fa';
 
 function SideBar() {
 
+  // ADMIN ROLE FIELDS
   const adminFields = [
     { field: "Dashboard", navigate: "/admin/dashboard" },
     { field: "User", navigate: "/admin/user" },
   ];
 
+  // MANAGER ROLE FIELDS
   const managerFields = [
     { field: "Dashboard", navigate: "/manager/dashboard" },
     { field: "Customers", navigate: "/manager/customers" },
   ];
 
+  // ROLE FROM LOCAL STORAGE 
   const role = "ADMIN";
 
   return (
@@ -37,7 +40,6 @@ function SideBar() {
       <div className="px-4 flex-1 overflow-y-auto">
 
         <ul className="space-y-2 mt-2">
-
           {
             (role === "ADMIN" ? adminFields : role === "MANAGER" ? managerFields : []).map((item, index) => (
 
