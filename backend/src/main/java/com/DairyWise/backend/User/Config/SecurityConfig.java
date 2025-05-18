@@ -24,7 +24,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-    String[] permittedUrls = { "/user/", "/user/login", "/user/register", "/Manager/login", "/admin/", "/manager/",
+    String[] permittedUrls = {"/user/", "/user/login", "/user/register", "/Manager/login", "/admin/", "/manager/",
         "/customer/", "/dailyEntry/" };
     httpSecurity
         .cors(cors -> cors.disable())

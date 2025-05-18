@@ -1,23 +1,71 @@
 # FRONTEND  
 
 ## COMMON/SHARED
-1. LoginPage
-1. AccesDenied/Unauthorized
-1. 404PageNotFound
+* LoginPage
+* AccesDenied/Unauthorized
+* 404PageNotFound
 
-## SUDO
-1. Dashboard
-1. UserManagement
-1. Rerports
+## SUDO  
+* Dashboard
+  * Summary cards (total users, Managers, admins,lockedUsers)
+  * Charts(user Growth, Subscription Status)
+* UserManagement
+    * Table with all the users
+    * each row have an username and then Edit btn
+    * VIEW BUTTON
+    * EDIT BUTTON 
+        * userName ,Email ,lock/unlock ,enable/disable
+        * Submit and cancel
+    * pagination to control the pages
+    * SEARCH
+        * By username/email/(lock/unlock)/(enable/disable)/subscirption/
+    * File button (Excel/csv/pdf)
+* Reports
+    * total user and new user 
+    * daily entry frequency
+    * managers subscribed and Unsubscribed
 
 ## ADMIN
-1. Dashboard
-1. ManagerManagement
-1. Reports
-1. SubscriptionManagement
+* Dashboard
+    * Summary cards (total Managers,lockedManger)
+    * Charts(Manager Growth, Subscription Status)
+* ManagerManagement
+    * Table with all the managers
+    * each row have an username and then Edit btn
+    * VIEW BUTTON
+    * EDIT BUTTON 
+        * userName ,Email ,lock/unlock ,enable/disable
+        * Submit and cancel
+    * pagination to control the pages
+    * SEARCH
+        * By ManagerName/email/(lock/unlock)/(enable/disable)/subscirption/
+    * File button (Excel/csv/pdf)
+* Reports
+    * total user and new user 
+    * daily entry frequency
+    * managers subscribed and Unsubscribed
+    * Report generation
 
 ## MANAGER  
-1. Dashboard 
-1. CustomerManagement
-1. DailyEntry
-1. Reports
+* Dashboard 
+    * Summary cards (total Managers,lockedManger)
+    * Charts(Manager Growth, Subscription Status)
+
+* CustomerManagement
+    * Table with all the managers
+    * each row have an username and then Edit btn
+    * VIEW BUTTON
+    * EDIT BUTTON 
+        * userName ,Email ,lock/unlock ,enable/disable
+        * Submit and cancel
+    * pagination to control the pages
+    * SEARCH
+        * By ManagerName/email/(lock/unlock)/(enable/disable)/subscirption/
+    * File button (Excel/csv/pdf)
+* DailyEntry
+    * Entry form (LEFT)
+    * Latest entries (RIGHT)
+    * SUBMIT AND CANCEL BUTTON
+* Reports
+    * Daily Entry
+    * Daily/Monthly/Yearly Report for Customer/Customers

@@ -1,0 +1,62 @@
+http://localhost:8080
+
+#CURL
+--silent
+--include
+#HEADER
+ACCEPT : application/json;
+Connection: keep-alive
+Content-Type : application/json;
+User-Agent : VRC
+
+GET /user/
+Content-Type: application/json
+
+
+http://localhost:8080
+#CURL
+--silent
+
+#HEADER
+ACCEPT : application/json;
+Connection: keep-alive
+Content-Type : application/json;
+User-Agent : VRC
+POST /user/register
+{
+  "userId":"user2",
+  "password":"user1",
+  "role":"ADMIN"
+}
+
+http://localhost:8080
+#CURL
+
+#HEADER
+ACCEPT : application/json;
+Connection: keep-alive
+Content-Type : application/json;
+User-Agent : VRC
+
+POST /user/login
+{
+  "userId":"user2",
+  "password":"user1"
+}
+
+
+http://localhost:8080
+#CURL
+
+#HEADER
+ACCEPT : application/json;
+Connection: keep-alive
+Content-Type : application/json;
+User-Agent : VRear
+Authorization: Basic base64(dXNlcjE6dXNlcjE=
+)
+
+GET /user/get/all
+
+http://www.testingmcafeesites.com
+GET /testcat_an.html
