@@ -4,7 +4,7 @@ function AdminDashboard() {
   return (
     <div className='h-full w-full'>
       <div>
-        MANAGER ALL
+        ADMIN :
       </div>
     </div>
   )

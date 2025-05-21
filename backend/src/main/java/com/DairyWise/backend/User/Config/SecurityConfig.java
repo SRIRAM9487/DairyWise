@@ -1,5 +1,6 @@
 package com.DairyWise.backend.User.Config;
 
+import com.DairyWise.backend.User.Model.UserRoles;
 import com.DairyWise.backend.User.Service.UserDetailsServiceImp;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,6 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-    String[] permittedUrls = {"/user/", "/user/login", "/user/register", "/Manager/login", "/admin/", "/manager/",
-        "/customer/", "/dailyEntry/" };
     httpSecurity
         .cors(cors -> cors.disable())
         .csrf(csrf -> csrf.disable())
@@ -34,7 +33,10 @@ public class SecurityConfig {
         .formLogin(page -> page.disable())
         .authorizeHttpRequests(
             request -> request
-                .requestMatchers(permittedUrls).permitAll()
+                .requestMatchers(AppConstant.PUBLIC_URLS).permitAll()
+                .requestMatchers(AppConstant.SUDO_URLS).hasRole(UserRoles.SUDO.name())
+                .requestMatchers(AppConstant.ADMIN_URLS).hasRole(UserRoles.ADMIN.name())
+                .requestMatchers(AppConstant.MANAGER_URLS).hasRole(UserRoles.MANGER.name())
                 .anyRequest().authenticated());
     return httpSecurity.build();
   }

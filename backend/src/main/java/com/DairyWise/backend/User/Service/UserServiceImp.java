@@ -82,6 +82,7 @@ public class UserServiceImp implements UserService {
       throw new UserInvalidRoleException("Invalid role");
     }
 
+
     UserModel user = UserModel.builder()
         .userId(registerDTO.getUserId())
         .password(encoder.encode(registerDTO.getPassword()))

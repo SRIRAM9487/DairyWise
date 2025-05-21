@@ -8,9 +8,9 @@ import lombok.Data;
 public class UserRegisterResponseDTO {
 
   private String userId;
-  private String password;
   private String role;
   private String name;
   private String status;
+  private String email;
 
 }

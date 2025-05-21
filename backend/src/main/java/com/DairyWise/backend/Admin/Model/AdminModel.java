@@ -22,7 +22,6 @@ public class AdminModel {
 
   @Id
   private Long id;
-
   private String name;
   private String email;
   private String phoneNumber;

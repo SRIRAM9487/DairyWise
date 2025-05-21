@@ -1,6 +1,6 @@
 import TableComponent from "../../Components/Table";
 
-function Users() {
+function Managers() {
 
   const data = Array.from({ length: 100 }, (_, index) => ({
     id: index + 1,
@@ -36,4 +36,4 @@ const columns = [
   )
 }
 
-export default Users
+export default Managers

@@ -5,7 +5,7 @@ import AdminDashboard from './Pages/Admin/AdminDashboard'
 import ManagerDashboard from './Pages/Manager/ManagerDashboard';
 import Dashboard from './Pages/Layout/Dashboard';
 import DefaultPageLayout from './Pages/Layout/DefaultPageLayout';
-import Users from './Pages/Admin/Users';
+import Managers from './Pages/Admin/Managers';
 
 function App() {
   let role = localStorage.getItem("role");
@@ -24,7 +24,7 @@ function App() {
               ) :
                 <Route path='/dashboard' element={<Dashboard />} />
           }
-          <Route path='/admin/user' element={<Users />} />
+          <Route path='/admin/manager' element={<Managers />} />
         </Route>
       </Routes>
     </BrowserRouter>
